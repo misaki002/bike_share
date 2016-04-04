@@ -9,19 +9,17 @@ test <- read.csv("test.csv")
 #temp, atemp, humidity, windspeed
 
 #factorize categorical data in training set & testing set
-#weather, holiday, workingday, season, windspeed
+#weather, holiday, workingday, season
 train_factor <- train
 train_factor$weather <- factor(train$weather)
 train_factor$holiday <- factor(train$holiday)
 train_factor$workingday <- factor(train$workingday)
 train_factor$season <- factor(train$season)
-train_factor$windspeed <- factor(train$windspeed)
 test_factor <- test
 test_factor$weather <- factor(test$weather)
 test_factor$holiday <- factor(test$holiday)
 test_factor$workingday <- factor(test$workingday)
 test_factor$season <- factor(test$season)
-test_factor$windspeed <- factor(test$windspeed)
 
 #create hour factors from timestamp
 #hour
@@ -64,8 +62,8 @@ install.packages('party')
 library('party')
 
 #build formula
-formula_registered <- registered ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeeds + hour + day + sunday + year
-formula_casual <- casual ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeeds + hour + day + sunday + year
+formula_registered <- registered ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeed + hour + day + sunday + year
+formula_casual <- casual ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeed + hour + day + sunday + year
 
 #build our model
 fit_r.ctree <- ctree(formula_registered, data=train_factor)
@@ -76,10 +74,12 @@ fit_r.ctree
 fit_c.ctree
 
 #run model against test data set
-predict.ctree <- predict(fit.ctree, test_factor)
+predict_r.ctree <- predict(fit_r.ctree, test_factor)
+predict_c.ctree <- predict(fit_c.ctree, test_factor)
+test$count<-round(predict_r.ctree+predict_c.ctree,0)
 
 #build a dataframe with our results
-submit.ctree <- data.frame(datetime = test$datetime, count=predict.ctree)
+submit.ctree <- data.frame(datetime = test$datetime, count=test$count)
 
 #write results to .csv for submission
 write.csv(submit.ctree, file="submit_ctree_v1.csv",row.names=FALSE)
