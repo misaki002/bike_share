@@ -9,17 +9,19 @@ test <- read.csv("test.csv")
 #temp, atemp, humidity, windspeed
 
 #factorize categorical data in training set & testing set
-#weather, holiday, workingday, season
+#weather, holiday, workingday, season, windspeed
 train_factor <- train
 train_factor$weather <- factor(train$weather)
 train_factor$holiday <- factor(train$holiday)
 train_factor$workingday <- factor(train$workingday)
 train_factor$season <- factor(train$season)
+train_factor$windspeed <- factor(train$windspeed)
 test_factor <- test
 test_factor$weather <- factor(test$weather)
 test_factor$holiday <- factor(test$holiday)
 test_factor$workingday <- factor(test$workingday)
 test_factor$season <- factor(test$season)
+test_factor$windspeed <- factor(test$windspeed)
 
 #create hour factors from timestamp
 #hour
@@ -62,13 +64,16 @@ install.packages('party')
 library('party')
 
 #build formula
-formula <- count ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeeds + hour + day + sunday
+formula_registered <- registered ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeeds + hour + day + sunday + year
+formula_casual <- casual ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeeds + hour + day + sunday + year
 
 #build our model
-fit.ctree <- ctree(formula, data=train_factor)
+fit_r.ctree <- ctree(formula_registered, data=train_factor)
+fit_c.ctree <- ctree(formula_casual, data=train_factor)
 
 #examine model for variable importance
-fit.ctree
+fit_r.ctree
+fit_c.ctree
 
 #run model against test data set
 predict.ctree <- predict(fit.ctree, test_factor)
