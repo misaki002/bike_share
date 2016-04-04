@@ -23,12 +23,14 @@ test_factor$season <- factor(test$season)
 
 #create hour factors from timestamp
 #hour
-train_factor$time <- substring(train$datetime,12,20)
+train_factor$time <-substring(train$datetime,12,20)
 test_factor$time <- substring(test$datetime,12,20)
-train_factor$hour<- as.numeric(substr(train_factor$time,1,2))
-test_factor$hour<- as.numeric(substr(test_factor$time,1,2))
-train_factor$hour <- factor(train_factor$hour)
-test_factor$hour <- factor(test_factor$hour)
+train_factor$time <-substring(train_factor$time,1,2)
+test_factor$time <-substring(test_factor$time,1,2)
+train_factor$time <-as.integer(train_factor$time)
+test_factor$time <-as.integer(test_factor$time)
+train_factor$hour <- factor(train_factor$time)
+test_factor$hour <- factor(test_factor$time)
 
 #create day of week factors from timestamp
 #day
@@ -45,6 +47,15 @@ test_factor$sunday[test_factor$day == "Sunday"] <- "1"
 test_factor$sunday[test_factor$day != "Sunday"] <- "0"
 train_factor$sunday <- as.factor(train_factor$sunday)
 test_factor$sunday <- as.factor(test_factor$sunday)
+
+#create year factors (feature engineering)
+#year
+train_factor$year <-substring(train$datetime,1,4)
+test_factor$year <- substring(test$datetime,1,4)
+train_factor$year <-as.integer(train_factor$year)
+test_factor$year <-as.integer(test_factor$year)
+train_factor$year <- factor(train_factor$year)
+test_factor$year <- factor(test_factor$year)
 
 #install party package
 install.packages('party')
