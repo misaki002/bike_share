@@ -1,0 +1,23 @@
+#set directory and read csv file
+train <- read.csv("train.csv")
+
+train_factor$weather <- factor(train$weather)
+train_factor$holiday <- factor(train$holiday)
+train_factor$workingday <- factor(train$workingday)
+train_factor$season <- factor(train$season)
+
+#hour
+train_factor$time <-substring(train$datetime,12,20)
+train_factor$time <-substring(train_factor$time,1,2)
+train_factor$time <-as.integer(train_factor$time)
+train_factor$hour <- factor(train_factor$time)
+
+#day
+train_factor$day <- weekdays(as.Date(train_factor$datetime))
+train_factor$day <- as.factor(train_factor$day)
+
+#year
+train_factor$year <-substring(train$datetime,1,4)
+train_factor$year <-as.integer(train_factor$year)
+train_factor$year <- factor(train_factor$year)
+
