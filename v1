@@ -1,6 +1,6 @@
 #set directory and read csv file
 train <- read.csv("train.csv")
-
+train_factor <- train
 train_factor$weather <- factor(train$weather)
 train_factor$holiday <- factor(train$holiday)
 train_factor$workingday <- factor(train$workingday)
@@ -27,6 +27,6 @@ library(scales)
 
 x_axis_hour <- train_factor$hour
 y_axis <- train$count
-p <- ggplot(train, aes(x=x_axis_hour, y=y_axis)) + geom_point() + xlab("Hour of Day") + ylab("Bike Rentals") +
-     ggtitle("People rent bikes for morning/evening commutes on weekdays, and daytime rides on weekends\n") 
-ggsave("rentals_hour.jpg)
+p_hour <- ggplot(train, aes(x=x_axis_hour, y=y_axis)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Hour of Day") + ylab("Bike Rentals") +
+     ggtitle("More bike are rented during commuting time.\n") 
+ggsave("rentals_hour.jpg",p_hour)
