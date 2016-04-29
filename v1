@@ -35,13 +35,13 @@ ggsave("rentals_hour.jpg",p_hour)
 #-----------------------------------------------------------
 x_axis <- "jitter_times"
 y_axis_count <- "count"
-color  <- "temp_f"
+color_temp  <- "temp_f"
 
 train$times <- as.POSIXct(strftime(ymd_hms(train$datetime), format="%H:%M:%S"), format="%H:%M:%S")
 train$jitter_times <- train$times+minutes(round(runif(nrow(train),min=0,max=59)))
 train$temp_f <- train$temp*9/5+32
 
-p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color)) +
+p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color_temp)) +
      geom_point(position=position_jitter(w=0.0, h=0.4)) +
      xlab("Hour of Day") +
      ylab("Bike Rentals") +
@@ -51,3 +51,18 @@ p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
      theme_light(base_size=25) 
 print(p_temp)
 ggsave("rentals__hour_temperature.png", p_temp)
+
+#-------------------------------------------------------------
+
+color_humi  <- "humidity"
+
+p_humi <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color_humi)) +
+     geom_point(position=position_jitter(w=0.0, h=0.4)) +
+     xlab("Hour of Day") +
+     ylab("Bike Rentals") +
+     scale_x_datetime(breaks = date_breaks("4 hours"), labels=date_format("%I:%M %p")) + 
+     scale_colour_gradientn("Humidity", colours=c("#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142")) +
+     ggtitle("Bike rentals has different patterns related to humidity during weekdays. \n")+
+     theme_light(base_size=25) 
+print(p_humi)
+ggsave("rentals__hour_humidity.png", p_humi)
