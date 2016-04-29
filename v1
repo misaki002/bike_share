@@ -28,5 +28,25 @@ library(scales)
 x_axis_hour <- train_factor$hour
 y_axis <- train$count
 p_hour <- ggplot(train, aes(x=x_axis_hour, y=y_axis)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Hour of Day") + ylab("Bike Rentals") +
-     ggtitle("More bike are rented during commuting time.\n") 
+     ggtitle("More bikes are rented during commuting hour.\n") 
 ggsave("rentals_hour.jpg",p_hour)
+
+#-----------------------------------------------------------
+x_axis <- "jitter_times"
+y_axis_count <- "count"
+color  <- "temp_f"
+
+train$times <- as.POSIXct(strftime(ymd_hms(train$datetime), format="%H:%M:%S"), format="%H:%M:%S")
+train$jitter_times <- train$times+minutes(round(runif(nrow(train),min=0,max=59)))
+train$temp_f <- train$temp*9/5+32
+
+p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color)) +
+     geom_point(position=position_jitter(w=0.0, h=0.4)) +
+     xlab("Hour of Day") +
+     ylab("Bike Rentals") +
+     scale_x_datetime(breaks = date_breaks("4 hours"), labels=date_format("%I:%M %p")) + 
+     scale_colour_gradientn("Temp (°F)", colours=c("#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142")) +
+     ggtitle("More bikes are rented on warmer weather during weekdays.\n")+
+     theme_light(base_size=25) 
+
+ggsave("rentals__hour_temperature.png", p_temp)
