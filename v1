@@ -25,6 +25,12 @@ library(ggplot2)
 library(lubridate)
 library(scales)
 
+
+p_year <- ggplot(train, aes(x=train$datetime, y=train$count)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Time Series") + ylab("Bike Rentals") +
+     ggtitle("Overall trend of bike rentals from 2011 to 2012.\n") 
+print(p_year)
+ggsave("rentals_year.jpg",p_year)
+#--------------------------------------------------------------------
 x_axis_hour <- train_factor$hour
 y_axis <- train$count
 p_hour <- ggplot(train, aes(x=x_axis_hour, y=y_axis)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Hour of Day") + ylab("Bike Rentals") +
@@ -66,3 +72,17 @@ p_humi <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
      theme_light(base_size=25) 
 print(p_humi)
 ggsave("rentals__hour_humidity.png", p_humi)
+
+#-----------------------------------------------------------------
+color_wind  <- "windspeed"
+
+p_wind <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color_wind)) +
+     geom_point(position=position_jitter(w=0.0, h=0.4)) +
+     xlab("Hour of Day") +
+     ylab("Bike Rentals") +
+     scale_x_datetime(breaks = date_breaks("4 hours"), labels=date_format("%I:%M %p")) + 
+     scale_colour_gradientn("Windspeed", colours=c("#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142")) +
+     ggtitle("More bikes are rented when windspeed lower during weekdays. \n")+
+     theme_light(base_size=25) 
+print(p_wind)
+ggsave("rentals__hour_wind.png", p_wind)
