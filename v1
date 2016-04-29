@@ -29,6 +29,7 @@ x_axis_hour <- train_factor$hour
 y_axis <- train$count
 p_hour <- ggplot(train, aes(x=x_axis_hour, y=y_axis)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Hour of Day") + ylab("Bike Rentals") +
      ggtitle("More bikes are rented during commuting hour.\n") 
+print(p_hour)
 ggsave("rentals_hour.jpg",p_hour)
 
 #-----------------------------------------------------------
@@ -48,5 +49,5 @@ p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
      scale_colour_gradientn("Temp (°F)", colours=c("#5e4fa2", "#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#fee08b", "#fdae61", "#f46d43", "#d53e4f", "#9e0142")) +
      ggtitle("More bikes are rented on warmer weather during weekdays.\n")+
      theme_light(base_size=25) 
-
+print(p_temp)
 ggsave("rentals__hour_temperature.png", p_temp)
