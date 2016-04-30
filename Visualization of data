@@ -5,48 +5,46 @@ train_factor$weather <- factor(train$weather)
 train_factor$holiday <- factor(train$holiday)
 train_factor$workingday <- factor(train$workingday)
 train_factor$season <- factor(train$season)
-
 #hour
 train_factor$time <-substring(train$datetime,12,20)
 train_factor$time <-substring(train_factor$time,1,2)
 train_factor$time <-as.integer(train_factor$time)
 train_factor$hour <- factor(train_factor$time)
-
 #day
 train_factor$day <- weekdays(as.Date(train_factor$datetime))
 train_factor$day <- as.factor(train_factor$day)
-
 #year
 train_factor$year <-substring(train$datetime,1,4)
 train_factor$year <-as.integer(train_factor$year)
 train_factor$year <- factor(train_factor$year)
 
+#visualization part 
 library(ggplot2)
 library(lubridate)
 library(scales)
+library(readr)
+y_axis <- train$count
 
-
-p_year <- ggplot(train, aes(x=train$datetime, y=train$count)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Time Series") + ylab("Bike Rentals") +
-     ggtitle("Overall trend of bike rentals from 2011 to 2012.\n") 
+#Bike rentals&year
+p_year <- ggplot(train, aes(x=train$datetime, y=y_axis)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Time Series") + ylab("Bike Rentals") +
+          ggtitle("Overall trend of bike rentals from 2011 to 2012.\n") 
 print(p_year)
 ggsave("rentals_year.jpg",p_year)
-#--------------------------------------------------------------------
+
+#Bike rentals&hour
 x_axis_hour <- train_factor$hour
-y_axis <- train$count
 p_hour <- ggplot(train, aes(x=x_axis_hour, y=y_axis)) + geom_point(position=position_jitter(w=0.0, h=0.4)) + xlab("Hour of Day") + ylab("Bike Rentals") +
      ggtitle("More bikes are rented during commuting hour.\n") 
 print(p_hour)
 ggsave("rentals_hour.jpg",p_hour)
 
-#-----------------------------------------------------------
+#Bike rentals&temperature
 x_axis <- "jitter_times"
 y_axis_count <- "count"
 color_temp  <- "temp_f"
-
 train$times <- as.POSIXct(strftime(ymd_hms(train$datetime), format="%H:%M:%S"), format="%H:%M:%S")
 train$jitter_times <- train$times+minutes(round(runif(nrow(train),min=0,max=59)))
 train$temp_f <- train$temp*9/5+32
-
 p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color_temp)) +
      geom_point(position=position_jitter(w=0.0, h=0.4)) +
      xlab("Hour of Day") +
@@ -58,10 +56,8 @@ p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
 print(p_temp)
 ggsave("rentals__hour_temperature.png", p_temp)
 
-#-------------------------------------------------------------
-
+#Bike rentals&humidity 
 color_humi  <- "humidity"
-
 p_humi <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color_humi)) +
      geom_point(position=position_jitter(w=0.0, h=0.4)) +
      xlab("Hour of Day") +
@@ -73,9 +69,8 @@ p_humi <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
 print(p_humi)
 ggsave("rentals__hour_humidity.png", p_humi)
 
-#-----------------------------------------------------------------
+#Bike rentals&windspeed
 color_wind  <- "windspeed"
-
 p_wind <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_count, color=color_wind)) +
      geom_point(position=position_jitter(w=0.0, h=0.4)) +
      xlab("Hour of Day") +
