@@ -95,3 +95,52 @@ p_weekdays <- ggplot(train, aes(x=train$times, y=y_axis, color=day)) +
      theme(plot.title=element_text(size=18))
 print(p_weekdays)
 ggsave("rentals_weekdays.png",p_weekdays)
+
+#Bike rentals&season
+train_factor$seasonN[train_factor$season == "1"] <- "Spring"
+train_factor$seasonN[train_factor$season == "2"] <- "Summer"
+train_factor$seasonN[train_factor$season == "3"] <- "Autumn"
+train_factor$seasonN[train_factor$season == "4"] <- "Winter"
+p_season <- ggplot(train, aes(x=train$times, y=y_axis, color=train_factor$seasonN)) +
+     geom_smooth(fill=NA, size=2) +
+     theme_light(base_size=20) +
+     xlab("Hour of Day") +
+     scale_x_datetime(breaks = date_breaks("4 hours"), labels=date_format("%I:%M %p")) + 
+     ylab("Bike Rentals") +
+     scale_color_discrete("") +
+     ggtitle("Bike rentals has different patterns on different season\n") +
+     theme(plot.title=element_text(size=18))
+print(p_season)
+ggsave("rentals_seasons.png",p_season)
+
+#Bike rentals&weather
+train_factor$weatherN[train_factor$weather == "1"] <- "Clear"
+train_factor$weatherN[train_factor$weather == "2"] <- "Cloudy"
+train_factor$weatherN[train_factor$weather == "3"] <- "Light rain&snow"
+train_factor$weatherN[train_factor$weather == "4"] <- "Heavy rain&snow"
+p_weather <- ggplot(train, aes(x=train$times, y=y_axis, color=train_factor$weatherN)) +
+     geom_smooth(fill=NA, size=2) +
+     theme_light(base_size=20) +
+     xlab("Hour of Day") +
+     scale_x_datetime(breaks = date_breaks("4 hours"), labels=date_format("%I:%M %p")) + 
+     ylab("Bike Rentals") +
+     scale_color_discrete("") +
+     ggtitle("Bike rentals has different patterns on different weather\n") +
+     theme(plot.title=element_text(size=18))
+print(p_weather)
+ggsave("rentals_weather.png",p_weather)
+
+#Bike rentals&holiday
+train_factor$holidayN[train_factor$holiday == "0"] <- "Non-holiday"
+train_factor$holidayN[train_factor$holidy == "1"] <- "Holiday"
+p_holiday <- ggplot(train, aes(x=train$times, y=y_axis, color=train_factor$holidayN)) +
+     geom_smooth(fill=NA, size=2) +
+     theme_light(base_size=20) +
+     xlab("Hour of Day") +
+     scale_x_datetime(breaks = date_breaks("4 hours"), labels=date_format("%I:%M %p")) + 
+     ylab("Bike Rentals") +
+     scale_color_discrete("") +
+     ggtitle("Bike rentals has different patterns on holiday\n") +
+     theme(plot.title=element_text(size=18))
+print(p_holiday)
+ggsave("rentals_holiday.png",p_holiday)
