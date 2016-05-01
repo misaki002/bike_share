@@ -53,14 +53,23 @@ test_factor$year <-as.integer(test_factor$year)
 train_factor$year <- factor(train_factor$year)
 test_factor$year <- factor(test_factor$year)
 
+#factor selection for casual&registered
 library(randomForest)
-myNtree = 500
-myMtry = 5
-myImportance = TRUE
 set.seed(415)
 formula_casual <- casual ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeed + hour + day + sunday + year
-casualFit <- randomForest(formula_casual, data=train_factor, ntree=myNtree, mtry=myMtry, importance=myImportance)
+casualFit <- randomForest(formula_casual, data=train_factor, ntree=500, mtry=5, importance=TRUE)
 varImpPlot(x=casualFit, sort=TRUE) 
 formula_registered <- registered ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeed + hour + day + sunday + year
-registeredFit <- randomForest(formula_registered, data=train_factor, ntree=myNtree, mtry=myMtry, importance=myImportance)
+registeredFit <- randomForest(formula_registered, data=train_factor, ntree=500, mtry=5, importance=TRUE)
 varImpPlot(x=registeredFit, sort=TRUE)
+
+#random forest model 
+formula_casual <- casual ~ hour + year + humidity + temp + workingday + atemp + weather + windspeed +day
+casualFit <- randomForest(formula_casual, data=train_factor, ntree=500, mtry=5, importance=TRUE)
+test$casual <- predict(casualFit, test_factor)
+formula_registered <- registered ~ hour + year + season + weather + workingday + humidity + atemp + day +temp
+registeredFit <- randomForest(formula_registered, data=train_factor, ntree=500, mtry=5, importance=TRUE)
+test$registered <- predict(registeredFit, test_factor)
+test$count <- round(test$casual + test$registered, 0)
+submit.random <- data.frame (datetime = test$datetime, count = test$count)
+write.csv(submit.random, file = "submit_random.csv", row.names=FALSE)
