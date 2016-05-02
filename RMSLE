@@ -1,0 +1,11 @@
+> compare <- read.csv("comparison.csv")
+> library(Metrics)
+> compare1 <- rmsle(compare$real_count, abs(compare$count_v1))
+> compare1
+[1] 0.5136562
+> compare2 <- rmsle(compare$real_count, abs(compare$count_v2))
+> compare2
+[1] 0.4667739
+> compare3 <- rmsle(compare$real_count, abs(compare$count_v3))
+> compare3
+[1] 0.4444703
