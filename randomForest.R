@@ -1,3 +1,7 @@
+# random forest model for bike rentals prediction
+
+#set directory and read csv file
+setwd("D:\final\test3")
 train <- read.csv("train.csv")
 test <- read.csv("test.csv")
 
@@ -53,27 +57,31 @@ test_factor$year <-as.integer(test_factor$year)
 train_factor$year <- factor(train_factor$year)
 test_factor$year <- factor(test_factor$year)
 
-#####RANDOM FOREST STARTS HERE#########
-#variables
+#install party package
+install.packages('randomForest')
 library(randomForest)
+
+#variables setting
 myNtree = 500
 myMtry = 5
 myImportance = TRUE
-#set the random seed
 set.seed(415)
-#fit and predict casual
+
+#build formula&model for "casual"
 casualFit <- randomForest(casual ~ hour + year + humidity + temp + atemp + workingday + weekday, data=train, ntree=myNtree, mtry=myMtry, importance=myImportance)
 test$casual <- predict(casualFit, test)
-#fit and predict registered
+
+#build formula&model for "registered"
 registeredFit <- randomForest(registered ~ hour + year + season + weather + workingday + humidity + weekday + atemp, data=train, ntree=myNtree, mtry=myMtry, importance=myImportance)
 test$registered <- predict(registeredFit, test)
-#add both columns into final count, round to whole number
+
+#results
 test$count <- round(test$casual + test$registered, 0)
 
-#testplot
+#plot testing
 plot(train$count)
 plot(test$count)
 
-####create output file from dataset test with predictions
+#write results to .csv file
 submit <- data.frame (datetime = test$datetime, count = test$count)
-write.csv(submit, file = "randomForest_Prediction.csv", row.names=FALSE)
+write.csv(submit, file = "randomForest.csv", row.names=FALSE)
