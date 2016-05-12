@@ -1,7 +1,7 @@
 # visualization for relationship between bike rentals with other data fields 
 
 #set directory and read csv file
-setwd("D:\final\test4")
+setwd("D:\final\test5")
 train <- read.csv("train.csv")
 
 # numerical data
