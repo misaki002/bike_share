@@ -1,3 +1,7 @@
+# random forest model for bike rentals prediction
+
+#set directory and read csv file
+setwd("D:\final\test3")
 train <- read.csv("train.csv")
 test <- read.csv("test.csv")
 
@@ -70,6 +74,14 @@ test$casual <- predict(casualFit, test_factor)
 formula_registered <- registered ~ hour + year + season + weather + workingday + humidity + atemp + day +temp
 registeredFit <- randomForest(formula_registered, data=train_factor, ntree=500, mtry=5, importance=TRUE)
 test$registered <- predict(registeredFit, test_factor)
+
+#results
 test$count <- round(test$casual + test$registered, 0)
+
+#plot testing
+plot(train$count)
+plot(test$count)
+
+#write results to .csv file
 submit.random <- data.frame (datetime = test$datetime, count = test$count)
-write.csv(submit.random, file = "submit_random.csv", row.names=FALSE)
+write.csv(submit.random, file = "randomForest.csv", row.names=FALSE)
