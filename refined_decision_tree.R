@@ -1,7 +1,7 @@
-# first model for the party package 
+# refined single decision tree model for bike rentals prediction
 
 #set directory and read csv file
-setwd("D:\final\test1")
+setwd("D:\final\test2")
 train <- read.csv("train.csv")
 test <- read.csv("test.csv")
 
@@ -65,21 +65,21 @@ library('party')
 formula_registered <- registered ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeed + hour + day + sunday + year
 formula_casual <- casual ~ season + holiday + workingday + weather + temp + atemp + humidity + windspeed + hour + day + sunday + year
 
-#build our model
+#build model
 fit_r.ctree <- ctree(formula_registered, data=train_factor)
 fit_c.ctree <- ctree(formula_casual, data=train_factor)
 
-#examine model for variable importance
+#variable importance
 fit_r.ctree
 fit_c.ctree
 
-#run model against test data set
+#run model over testing set
 predict_r.ctree <- predict(fit_r.ctree, test_factor)
 predict_c.ctree <- predict(fit_c.ctree, test_factor)
 test$count<-round(predict_r.ctree+predict_c.ctree,0)
 
-#build a dataframe with our results
+#results
 submit.ctree <- data.frame(datetime = test$datetime, count=test$count)
 
-#write results to .csv for submission
-write.csv(submit.ctree, file="submit_ctree_v1.csv",row.names=FALSE)
+#write results to .csv file
+write.csv(submit.ctree, file="refined_decision_tree.csv",row.names=FALSE)
