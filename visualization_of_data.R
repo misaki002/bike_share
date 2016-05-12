@@ -1,5 +1,14 @@
+# visualization for relationship between bike rentals with other data fields 
+
 #set directory and read csv file
+setwd("D:\final\test4")
 train <- read.csv("train.csv")
+
+# numerical data
+#temp, atemp, humidity, windspeed
+
+#factorize categorical data in training set & testing set
+#weather, holiday, workingday, season
 train_factor <- train
 train_factor$weather <- factor(train$weather)
 train_factor$holiday <- factor(train$holiday)
@@ -54,7 +63,7 @@ p_temp <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
      ggtitle("More bikes are rented on warmer weather during weekdays.\n")+
      theme_light(base_size=25) 
 print(p_temp)
-ggsave("rentals__hour_temperature.png", p_temp)
+ggsave("rentals_hour_temperature.png", p_temp)
 
 #Bike rentals&humidity 
 color_humi  <- "humidity"
@@ -67,7 +76,7 @@ p_humi <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
      ggtitle("Bike rentals has different patterns related to humidity during weekdays. \n")+
      theme_light(base_size=25) 
 print(p_humi)
-ggsave("rentals__hour_humidity.png", p_humi)
+ggsave("rentals_hour_humidity.png", p_humi)
 
 #Bike rentals&windspeed
 color_wind  <- "windspeed"
@@ -80,7 +89,7 @@ p_wind <- ggplot(train[train$workingday==1,], aes_string(x=x_axis, y=y_axis_coun
      ggtitle("More bikes are rented when windspeed lower during weekdays. \n")+
      theme_light(base_size=25) 
 print(p_wind)
-ggsave("rentals__hour_wind.png", p_wind)
+ggsave("rentals_hour_wind.png", p_wind)
 
 #Bike rentals&weekdays
 train$day   <- wday(ymd_hms(train$datetime), label=TRUE)
